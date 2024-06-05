@@ -1,16 +1,17 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { products } from "@/assets/data";
 import { Navigation } from "swiper/modules";
 import SwiperInstance from "swiper";
 import { ProductCard } from "../product/ProductCard";
+import { GetAllProductsHook } from "@/logic";
 
 interface IProps {
   setSwiper: React.Dispatch<React.SetStateAction<SwiperInstance | null>>;
 }
 
 export function HomeProductsList({ setSwiper }: IProps) {
+  const { products } = GetAllProductsHook();
   const breakpoints = {
     320: {
       slidesPerView: 1,
@@ -40,8 +41,14 @@ export function HomeProductsList({ setSwiper }: IProps) {
       {products.map((product) => (
         <SwiperSlide key={product.id}>
           <ProductCard
-            productName={product.prodName}
-            prodImage={product.image}
+            name={product.name}
+            id={product.id}
+            imageCover={product.imageCover}
+            quantity={product.quantity}
+            ratingCount={product.ratingCount}
+            ratingValue={product.ratingValue}
+            description={product.description}
+            colors={product.colors}
             badgeType="sale"
             saleCount="-45%"
             price={product.price}

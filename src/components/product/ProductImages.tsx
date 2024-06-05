@@ -1,12 +1,18 @@
-import { useState } from "react";
-import image1 from "../../assets/images/playstation-main.png";
-import image2 from "../../assets/images/playstation-side1.png";
-import image3 from "../../assets/images/playstation-side2.png";
-import image4 from "../../assets/images/playstation-side3.png";
+import { useState, useEffect } from "react";
 
-export function ProductImages() {
-  const images = [image1, image2, image3, image4];
-  const [mainImage, setMainImage] = useState(images[0]);
+interface IProps {
+  imageCover?: string;
+  images: string[];
+}
+
+export function ProductImages({ images = [] }: IProps) {
+  const [mainImage, setMainImage] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setMainImage(images[0]);
+    }
+  }, [images]);
 
   return (
     <section>
@@ -27,11 +33,13 @@ export function ProductImages() {
           ))}
         </div>
         <div className="flex h-[300px]  items-center justify-center rounded-sm bg-[#f5f5f5] lg:h-[600px] lg:w-[600px]">
-          <img
-            src={mainImage}
-            className="max-h-full max-w-full"
-            alt={`main image`}
-          />
+          {mainImage && (
+            <img
+              src={mainImage}
+              className="max-h-full max-w-full"
+              alt={`main image`}
+            />
+          )}
         </div>
       </div>
     </section>

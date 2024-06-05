@@ -5,7 +5,7 @@ export const GlobalSchema = () => {
   const { t } = useTranslation("global");
 
   const signInSchema = z.object({
-    name: z
+    username: z
       .string()
       .min(2, {
         message: t("validation.name.min"),

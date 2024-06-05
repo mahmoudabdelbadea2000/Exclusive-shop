@@ -1,3 +1,3 @@
 export function AllProductsPage() {
-  return <div></div>;
+  return <section className="min-h-[650px]"></section>;
 }

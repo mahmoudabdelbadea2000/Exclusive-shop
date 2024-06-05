@@ -3,8 +3,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import SwiperInstance from "swiper";
-import { categories } from "@/assets/data";
-import { Camera } from "lucide-react";
+import { GetCategoriesHook } from "@/logic";
+import { Skeleton } from "../ui/skeleton";
 
 interface IProps {
   setSwiper: React.Dispatch<React.SetStateAction<SwiperInstance | null>>;
@@ -29,6 +29,9 @@ export function HomeCategoryList({ setSwiper }: IProps) {
       spaceBetween: 30,
     },
   };
+
+  const { categories, isLoading } = GetCategoriesHook();
+
   return (
     <Swiper
       slidesPerView={1}
@@ -37,14 +40,26 @@ export function HomeCategoryList({ setSwiper }: IProps) {
       modules={[Navigation]}
       onSwiper={setSwiper}
     >
-      {categories.map((category) => (
-        <SwiperSlide key={category.id}>
-          <div className="group flex h-36 cursor-pointer flex-col items-center justify-center gap-4 rounded-sm border-[1px] border-[#0000004D] transition hover:border-main-color hover:bg-main-color">
-            <Camera className="h-14 w-14  group-hover:text-white" />
-            <span className="group-hover:text-white">{category.name}</span>
-          </div>
-        </SwiperSlide>
-      ))}
+      {isLoading
+        ? Array.from({ length: 6 }).map((_, i) => (
+            <SwiperSlide key={i}>
+              <div className="flex flex-col space-y-3">
+                <Skeleton className="h-[180px] w-[190px] rounded-sm" />
+              </div>
+            </SwiperSlide>
+          ))
+        : categories.map((category) => (
+            <SwiperSlide key={category.id}>
+              <div className="group flex h-36 cursor-pointer flex-col items-center justify-center gap-4 rounded-sm border-[1px] border-[#0000004D] transition hover:border-main-color hover:bg-main-color">
+                <img
+                  src={category.svg}
+                  alt={category.name}
+                  className="h-14 w-14 group-hover:text-white"
+                />
+                <span className="group-hover:text-white">{category.name}</span>
+              </div>
+            </SwiperSlide>
+          ))}
     </Swiper>
   );
 }

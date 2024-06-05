@@ -1,11 +1,15 @@
-import { Heart, Repeat2, Star, Truck } from "lucide-react";
+import { Heart, Repeat2, Truck } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { StarRating } from "../utils/StartRating";
+import i18n from "@/locales/i18n";
 
-export function ProductDescription() {
+export function ProductDescription({ ...oneProduct }) {
+  console.log(oneProduct);
   const { t } = useTranslation("global");
+  const currentLang = i18n.language;
   const [quantity, setQuantity] = useState<number>(1);
 
   const handleIncrement = () => {
@@ -21,53 +25,69 @@ export function ProductDescription() {
   return (
     <section className="mt-10 lg:mt-0">
       <div className="space-y-6">
-        <h6 className="text-2xl font-semibold">Havic HV G-92 Gamepad</h6>
+        <h6 className="text-2xl font-semibold">
+          {oneProduct && oneProduct.name && oneProduct.name[currentLang]}
+        </h6>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <div className="flex">
-              <Star className="h-5 w-5 text-[#FFAD33]" />
-              <Star className="h-5 w-5 text-[#FFAD33]" />
-              <Star className="h-5 w-5 text-[#FFAD33]" />
-              <Star className="h-5 w-5 text-[#FFAD33]" />
-              <Star className="h-5 w-5 text-[#FFAD33]" />
-            </div>
-            <span className="text-sm ">(150 {t("products.reviews")})</span>
+            <StarRating rating={5} />
+
+            {oneProduct &&
+              oneProduct.ratingCount &&
+              oneProduct.ratingCount[currentLang] && (
+                <span className="text-sm">
+                  ({oneProduct.ratingCount[currentLang]} {t("products.reviews")}
+                  )
+                </span>
+              )}
           </div>
           <span>|</span>
-          <span className="text-sm text-[#00FF66]">
-            {t("products.stock.in")}
-          </span>
+          {oneProduct && oneProduct.quantity ? (
+            <span className="text-sm text-[#00FF66]">
+              {t("products.stock.in")}
+            </span>
+          ) : (
+            <span className="text-sm text-main-color">
+              {t("products.stock.out")}
+            </span>
+          )}
         </div>
-        <span className="block text-2xl">$192.00</span>
+        <span className="block text-2xl">
+          ${oneProduct && oneProduct.price && oneProduct.price[currentLang]}
+        </span>
         <p className="text-sm">
-          PlayStation 5 Controller Skin High quality vinyl with air channel
-          adhesive for easy bubble free install & mess free removal Pressure
-          sensitive.
+          {oneProduct &&
+            oneProduct.description &&
+            oneProduct.description[currentLang]}
         </p>
         <hr />
         <div className="flex items-center gap-6">
           {t("products.color")}:
           <div className="flex items-center gap-2">
-            <span className="block h-5 w-5 cursor-pointer rounded-full bg-main-color"></span>
-            <span className="block h-5 w-5 cursor-pointer rounded-full bg-[#A0BCE0]"></span>
-            <span className="block h-5 w-5 cursor-pointer rounded-full bg-green-900"></span>
+            {oneProduct &&
+              oneProduct.colors &&
+              oneProduct.colors.map((color: string) => (
+                <span
+                  key={color}
+                  className="block h-5 w-5 cursor-pointer rounded-full"
+                  style={{ backgroundColor: color }}
+                ></span>
+              ))}
           </div>
         </div>
         <div className="flex items-center gap-6">
           {t("products.size")}:
           <div className="flex items-center gap-4">
-            <span className=" flex  h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border border-black text-sm font-medium uppercase transition hover:border-main-color hover:bg-main-color hover:text-white">
-              xs
-            </span>
-            <span className=" flex  h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border border-black text-sm font-medium uppercase transition hover:border-main-color hover:bg-main-color hover:text-white">
-              s
-            </span>
-            <span className=" flex  h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border border-black text-sm font-medium uppercase transition hover:border-main-color hover:bg-main-color hover:text-white">
-              m
-            </span>
-            <span className=" flex  h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border border-black text-sm font-medium uppercase transition hover:border-main-color hover:bg-main-color hover:text-white">
-              l
-            </span>
+            {oneProduct &&
+              oneProduct.sizes &&
+              oneProduct.sizes.map((size: string) => (
+                <span
+                  key={size}
+                  className=" flex  h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border border-black text-sm font-medium uppercase transition hover:border-main-color hover:bg-main-color hover:text-white"
+                >
+                  {size}
+                </span>
+              ))}
           </div>
         </div>
         <div className="flex items-center gap-2 lg:justify-between">

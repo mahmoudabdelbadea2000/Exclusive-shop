@@ -1,4 +1,5 @@
-import { ICategories, IProducts } from "@/interface";
+import { ICategories, IProd, IProducts } from "@/interface";
+import { serverTimestamp } from "firebase/firestore";
 
 export const products: IProducts[] = [
   {
@@ -74,16 +75,146 @@ export const products: IProducts[] = [
 ];
 
 export const categories: ICategories[] = [
-  { id: 0, name: "Camera", svg: "<Camera />" },
-  { id: 1, name: "Camera", svg: "<Camera />" },
-  { id: 2, name: "Camera", svg: "<Camera />" },
-  { id: 3, name: "Camera", svg: "<Camera />" },
-  { id: 4, name: "Camera", svg: "<Camera />" },
-  { id: 5, name: "Camera", svg: "<Camera />" },
-  { id: 6, name: "Camera", svg: "<Camera />" },
-  { id: 7, name: "Camera", svg: "<Camera />" },
-  { id: 8, name: "Camera", svg: "<Camera />" },
-  { id: 9, name: "Camera", svg: "<Camera />" },
-  { id: 10, name: "Camera", svg: "<Camera />" },
-  { id: 11, name: "Camera", svg: "<Camera />" },
+  { name: "Camera", svg: "/src/assets/images/Category-CellPhone.png" },
+  { name: "Camera", svg: "/src/assets/images/Category-Computer.png" },
+  { name: "Camera", svg: "/src/assets/images/Category-Gamepad.png" },
+  { name: "Camera", svg: "/src/assets/images/Category-Headphone.png" },
+  { name: "Camera", svg: "/src/assets/images/Category-SmartWatch.png" },
+];
+
+export const productsList: IProd[] = [
+  {
+    name: {
+      en: "AK-900 Wired Keyboard",
+      ar: "مفاتيح للكيبورد AK-900",
+    },
+    price: {
+      en: "960",
+      ar: "١٢٠",
+    },
+    description: {
+      en: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ",
+      ar: "إنها حقيقة مثبتة منذ زمن طويل أن المحتوى المقروء للصفحة سوف يشتت انتباه القارئ عند النظر إلى تخطيطها. المغزى من استخدام لوريم إيبسوم هو أنه يحتوي على توزيع طبيعي للحروف إلى حد ما، على عكس استخدام لوريم إيبسوم.",
+    },
+    imageCover: "/src/assets/images/keyboard.png",
+    ratingCount: {
+      en: "100",
+      ar: "١٠٠",
+    },
+    ratingValue: {
+      en: "5",
+      ar: "٥",
+    },
+    quantity: {
+      en: "5",
+      ar: "٥",
+    },
+    colors: ["#f5f5f5", "#000"],
+    createdAt: serverTimestamp(),
+  },
+  {
+    name: {
+      en: "HAVIT HV-G92 Gamepad",
+      ar: "دراع بلايستيشن HV-G92",
+    },
+    price: {
+      en: "120",
+      ar: "١٢٠",
+    },
+    description: {
+      en: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ",
+      ar: "إنها حقيقة مثبتة منذ زمن طويل أن المحتوى المقروء للصفحة سوف يشتت انتباه القارئ عند النظر إلى تخطيطها. المغزى من استخدام لوريم إيبسوم هو أنه يحتوي على توزيع طبيعي للحروف إلى حد ما، على عكس استخدام لوريم إيبسوم.",
+    },
+    imageCover: "/src/assets/images/product-1.png",
+    images: [
+      "/src/assets/images/product-1.png",
+      "/src/assets/images/product-1.png",
+      "/src/assets/images/product-1.png",
+    ],
+    ratingCount: {
+      en: "100",
+      ar: "١٠٠",
+    },
+    ratingValue: {
+      en: "5",
+      ar: "٥",
+    },
+    quantity: {
+      en: "5",
+      ar: "٥",
+    },
+    colors: ["#f5f5f5", "#f30203", "#1f42d0"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    createdAt: serverTimestamp(),
+  },
+  {
+    name: {
+      en: "HAVIT HV-G92 Gamepad",
+      ar: "دراع بلايستيشن HV-G92",
+    },
+    price: {
+      en: "120",
+      ar: "١٢٠",
+    },
+    description: {
+      en: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ",
+      ar: "إنها حقيقة مثبتة منذ زمن طويل أن المحتوى المقروء للصفحة سوف يشتت انتباه القارئ عند النظر إلى تخطيطها. المغزى من استخدام لوريم إيبسوم هو أنه يحتوي على توزيع طبيعي للحروف إلى حد ما، على عكس استخدام لوريم إيبسوم.",
+    },
+    imageCover: "/src/assets/images/playstation-main.png",
+    images: [
+      "/src/assets/images/playstation-side1.png",
+      "/src/assets/images/playstation-side2.png",
+      "/src/assets/images/playstation-side3.png",
+      "/src/assets/images/playstation-side4.png",
+    ],
+    ratingCount: {
+      en: "100",
+      ar: "١٠٠",
+    },
+    ratingValue: {
+      en: "5",
+      ar: "٥",
+    },
+    quantity: {
+      en: "5",
+      ar: "٥",
+    },
+    colors: ["#f5f5f5", "#f30203", "#1f42d0"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    createdAt: serverTimestamp(),
+  },
+  {
+    name: {
+      en: "The north coat",
+      ar: "[جاكيت جلد",
+    },
+    price: {
+      en: "120",
+      ar: "١٢٠",
+    },
+    description: {
+      en: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ",
+      ar: "إنها حقيقة مثبتة منذ زمن طويل أن المحتوى المقروء للصفحة سوف يشتت انتباه القارئ عند النظر إلى تخطيطها. المغزى من استخدام لوريم إيبسوم هو أنه يحتوي على توزيع طبيعي للحروف إلى حد ما، على عكس استخدام لوريم إيبسوم.",
+    },
+    imageCover: "/src/assets/images/jacket-1.png",
+    images: [
+      "/src/assets/images/jacket-1.png",
+      "/src/assets/images/jacket-2.png",
+    ],
+    ratingCount: {
+      en: "100",
+      ar: "١٠٠",
+    },
+    ratingValue: {
+      en: "5",
+      ar: "٥",
+    },
+    quantity: {
+      en: "5",
+      ar: "٥",
+    },
+    colors: ["#f5f5f5", "#f30203", "#1f42d0"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    createdAt: serverTimestamp(),
+  },
 ];

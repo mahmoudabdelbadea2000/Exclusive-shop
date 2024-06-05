@@ -7,8 +7,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react/jsx-runtime";
 
-export function BreadCrumb() {
+interface IProps {
+  ProductCrumb?: string;
+}
+
+export function BreadCrumb({ ProductCrumb }: IProps) {
   const { t } = useTranslation("global");
   const location = useLocation();
   const crumbs = location.pathname.split("/").filter((crumb) => crumb !== "");
@@ -22,16 +27,20 @@ export function BreadCrumb() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           {crumbs.splice(0, crumbs.length - 1).map((crumb, index) => (
-            <>
-              <BreadcrumbItem key={index}>
+            <Fragment key={index}>
+              <BreadcrumbItem>
                 <Link to={`/${crumb}`}>{t(`breadcrumb.${crumb}`)}</Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
-            </>
+            </Fragment>
           ))}
           <BreadcrumbItem>
             <BreadcrumbPage>
-              {t(`breadcrumb.${crumbs[crumbs.length - 1]}`) || "404 error"}
+              {ProductCrumb
+                ? ProductCrumb
+                : t(`breadcrumb.${crumbs[crumbs.length - 1]}`, {
+                    defaultValue: "404 error",
+                  })}
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>

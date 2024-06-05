@@ -1,6 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "../ui/button";
 import {
   FormControl,
@@ -10,42 +7,15 @@ import {
   Form,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { toast } from "../ui/use-toast";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { GlobalSchema } from "@/validation";
+import { SignInHook } from "@/logic";
 
 export function UserAuthLogin() {
-  const { loginSchema } = GlobalSchema();
   const { t } = useTranslation("global");
 
-  type userLoginValues = z.infer<typeof loginSchema>;
-  const defaultValues: Partial<userLoginValues> = {};
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const form = useForm<userLoginValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues,
-    mode: "onChange",
-  });
-
-  const onSubmit = (data: userLoginValues) => {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  };
+  const { form, isLoading, onSubmit } = SignInHook();
 
   return (
     <Form {...form}>

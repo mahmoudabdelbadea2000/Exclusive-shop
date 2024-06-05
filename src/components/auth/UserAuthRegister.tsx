@@ -1,6 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "../ui/button";
 import {
   FormControl,
@@ -10,48 +7,20 @@ import {
   Form,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { toast } from "../ui/use-toast";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
-import { GlobalSchema } from "@/validation";
+import { SignUpHook } from "@/logic";
 
 export function UserAuthRegister() {
-  const { signInSchema } = GlobalSchema();
   const { t } = useTranslation("global");
-
-  type userRegisterValues = z.infer<typeof signInSchema>;
-  const defaultValues: Partial<userRegisterValues> = {};
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const form = useForm<userRegisterValues>({
-    resolver: zodResolver(signInSchema),
-    defaultValues,
-    mode: "onChange",
-  });
-
-  const onSubmit = (data: userRegisterValues) => {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  };
+  const { form, isLoading, onSubmit } = SignUpHook();
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormControl>
