@@ -1,33 +1,29 @@
 import { db } from "@/firebase";
-import { collection, onSnapshot, DocumentData } from "firebase/firestore";
-import { useState, useEffect } from "react";
-
-interface ProductWithId extends DocumentData {
-  id: string;
-}
+import { IProd } from "@/interface";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export function GetAllProductsHook() {
-  const [products, setProducts] = useState<ProductWithId[]>([]);
+  const [products, setProducts] = useState<null | IProd[]>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<null | string>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    const unsubscribe = onSnapshot(
-      collection(db, "products"),
-      async (snapshot) => {
-        await setProducts(
-          snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })),
-        );
-
+    const getAllProds = async () => {
+      try {
+        setIsLoading(true);
+        const products = await getDocs(collection(db, "products"));
+        const prodsData = products.docs.map((doc) => doc.data() as IProd);
+        setProducts(prodsData);
         setIsLoading(false);
-      },
-    );
-
-    return () => unsubscribe();
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+      }
+    };
+    getAllProds();
   }, []);
 
-  return { products, isLoading };
+  return { products, isLoading, error };
 }

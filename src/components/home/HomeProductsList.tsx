@@ -4,13 +4,14 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import SwiperInstance from "swiper";
 import { ProductCard } from "../product/ProductCard";
+import { memo } from "react";
 import { GetAllProductsHook } from "@/logic";
 
 interface IProps {
   setSwiper: React.Dispatch<React.SetStateAction<SwiperInstance | null>>;
 }
 
-export function HomeProductsList({ setSwiper }: IProps) {
+export const HomeProductsList = memo(({ setSwiper }: IProps) => {
   const { products } = GetAllProductsHook();
   const breakpoints = {
     320: {
@@ -30,6 +31,7 @@ export function HomeProductsList({ setSwiper }: IProps) {
       spaceBetween: 30,
     },
   };
+
   return (
     <Swiper
       slidesPerView={1}
@@ -38,23 +40,24 @@ export function HomeProductsList({ setSwiper }: IProps) {
       modules={[Navigation]}
       onSwiper={setSwiper}
     >
-      {products.map((product) => (
-        <SwiperSlide key={product.id}>
-          <ProductCard
-            name={product.name}
-            id={product.id}
-            imageCover={product.imageCover}
-            quantity={product.quantity}
-            ratingCount={product.ratingCount}
-            ratingValue={product.ratingValue}
-            description={product.description}
-            colors={product.colors}
-            badgeType="sale"
-            saleCount="-45%"
-            price={product.price}
-          />
-        </SwiperSlide>
-      ))}
+      {products &&
+        products.map((product, idx) => (
+          <SwiperSlide key={idx}>
+            <ProductCard
+              name={product.name}
+              id={product.id}
+              imageCover={product.imageCover}
+              quantity={product.quantity}
+              ratingCount={product.ratingCount}
+              ratingValue={product.ratingValue}
+              description={product.description}
+              colors={product.colors}
+              badgeType="sale"
+              saleCount="-45%"
+              price={product.price}
+            />
+          </SwiperSlide>
+        ))}
     </Swiper>
   );
-}
+});

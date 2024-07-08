@@ -2,9 +2,11 @@ import { useTranslation } from "react-i18next";
 import { OneProdCart } from "./OneProdCart";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import { ViewCartItems } from "@/logic";
 
 export function CartProducts() {
   const { t } = useTranslation("global");
+  const { cartProducts, removeFromWishlist } = ViewCartItems();
   return (
     <section className="mt-24 space-y-10">
       <div className="flex items-center justify-between px-10 py-4 shadow-sm">
@@ -17,9 +19,17 @@ export function CartProducts() {
         </p>
         <p className="hidden w-1/4 text-end sm:block">{t("cart.total")}</p>
       </div>
-      <OneProdCart />
-      <OneProdCart />
-      <OneProdCart />
+      {cartProducts.map((product) => (
+        <OneProdCart
+          key={product.id}
+          id={product.id}
+          name={product.name}
+          price={product.price}
+          quantity={product.count}
+          imageCover={product.imageCover}
+          removeFromWishlist={removeFromWishlist}
+        />
+      ))}
       <div className="flex items-center justify-between">
         <Link to="/">
           <Button

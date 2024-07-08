@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "@/locales/i18n";
 import { AsideNav } from "./AsideNav";
 import { SignOutHook } from "@/logic/auth/SignOutHook";
-import { UserCredentials } from "@/logic/auth/userCredentials";
+import { useGetUser } from "@/Hooks/useGetUser";
 
 interface IProps {
   handleChangeLanguage: (e: string) => void;
@@ -33,7 +33,7 @@ export function Header({ handleChangeLanguage }: IProps) {
   const { t } = useTranslation("global");
   const currentLang = i18n.language;
   const { logOut } = SignOutHook();
-  const user = UserCredentials();
+  const { showUser } = useGetUser();
 
   return (
     <header className="border-b-[0.5px]">
@@ -56,12 +56,12 @@ export function Header({ handleChangeLanguage }: IProps) {
               />
               <Search className="absolute end-3 top-[50%] translate-y-[-50%]" />
             </form>
-            {user && (
+            {showUser && (
               <div className="flex items-center justify-start gap-2 lg:gap-4">
                 <Link to="wishlist">
                   <Heart />
                 </Link>
-                <Link to="cart">
+                <Link to="cart" className="relative">
                   <ShoppingCart />
                 </Link>
                 <DropdownMenu>

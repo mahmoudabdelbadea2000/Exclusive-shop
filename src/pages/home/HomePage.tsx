@@ -14,7 +14,7 @@ export const HomePage = () => {
   const { t } = useTranslation("global");
   return (
     <div className="container max-w-container-width">
-      <section className="grid lg:grid-cols-6">
+      <section className="grid lg:grid-cols-6 ">
         <HomeCatsSideBar />
         <HomeLandingPoster />
       </section>

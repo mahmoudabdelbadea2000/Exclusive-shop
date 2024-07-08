@@ -18,19 +18,82 @@ import {
   WishListPage,
 } from "./pages";
 import { Toaster } from "./components/ui/toaster";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
+  const accessToken = localStorage.getItem("accessToken");
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="sign-up" element={<SignUpPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="wishlist" element={<WishListPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="checkout" element={<CheckOutPage />} />
-          <Route path="account" element={<UserLayout />}>
+          <Route
+            path="sign-up"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/"
+              >
+                <SignUpPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/"
+              >
+                <LoginPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="wishlist"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/login"
+              >
+                <WishListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="cart"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/login"
+              >
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="checkout"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/login"
+              >
+                <CheckOutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="account"
+            element={
+              <ProtectedRoute
+                isAllowed={accessToken ? true : false}
+                redirectPath="/login"
+              >
+                <UserLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<UserProfilePage />} />
             <Route path="address" element={<UserAddressPage />} />
             <Route path="payment" element={<UserPaymentPage />} />

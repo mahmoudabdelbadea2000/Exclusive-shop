@@ -32,3 +32,4 @@ export * from "./contact/ContactForm";
 export * from "./product/ProductDetails";
 export * from "./utils/StartRating";
 export * from "./product/SkeletonCard";
+export * from "./auth/ProtectedRoute";

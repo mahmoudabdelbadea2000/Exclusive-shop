@@ -1,19 +1,23 @@
-import { FieldValue } from "firebase/firestore";
-
 export interface IProducts {
-  id: number;
+  id?: number;
   prodName: string;
   price: number;
   description: string;
   image: string;
 }
 
-export interface ICategories {
-  name: string;
-  svg: string;
+export interface ICates {
+  id?: string;
+  name: {
+    [key: string]: string;
+  };
+  image: string;
+  products: IProd[];
+  createdAt: string;
 }
 
 export interface IProd {
+  id?: string;
   name: {
     [key: string]: string;
   };
@@ -21,13 +25,14 @@ export interface IProd {
     [key: string]: string;
   };
   priceAfter?: {
-    [key: string]: string;
+    [key: string]: number;
   };
   description?: {
     [key: string]: string;
   };
   imageCover: string;
   images?: string[];
+  category?: ICates[];
   ratingCount?: {
     [key: string]: string;
   };
@@ -39,5 +44,5 @@ export interface IProd {
   };
   colors?: string[];
   sizes?: string[];
-  createdAt?: FieldValue;
+  createdAt?: string;
 }

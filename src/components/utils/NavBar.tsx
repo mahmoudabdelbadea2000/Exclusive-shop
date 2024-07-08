@@ -1,10 +1,11 @@
-import { UserCredentials } from "@/logic/auth/userCredentials";
+import { useGetUser } from "@/Hooks/useGetUser";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
 export function NavBar({ classname }: { classname?: string }) {
   const { t } = useTranslation("global");
-  const user = UserCredentials();
+
+  const { showUser } = useGetUser();
   return (
     <nav className={`text-primary ${classname} `}>
       <ul className={`flex items-center justify-between gap-12 ${classname}`}>
@@ -38,7 +39,7 @@ export function NavBar({ classname }: { classname?: string }) {
             {t("header.nav.about")}
           </NavLink>
         </li>
-        {!user && (
+        {!showUser && (
           <li>
             <NavLink
               to="sign-up"

@@ -5,16 +5,18 @@ import { useEffect, useState } from "react";
 import { GlobalSchema } from "@/validation";
 import { toast } from "@/components/ui/use-toast";
 import { auth } from "@/firebase";
-import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { UserCredentials } from "./userCredentials";
+import {
+  GoogleAuthProvider,
+  User,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 
 export function SignInHook() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
   const { loginSchema } = GlobalSchema();
-  const navigate = useNavigate();
-  const user = UserCredentials();
+  const [userCredentials, setUserCredentials] = useState<null | User>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<null | string>(null);
 
   type userLoginValues = z.infer<typeof loginSchema>;
   const form = useForm<userLoginValues>({
@@ -23,26 +25,43 @@ export function SignInHook() {
   });
 
   const onSubmit = async (data: userLoginValues) => {
-    setIsLoading(true);
-    setIsError(false);
-
+    const { email, password } = data;
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      setIsLoading(true);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      setUserCredentials(user);
       setTimeout(() => {
-        navigate("/");
+        window.location.href = "/";
       }, 1000);
     } catch (error) {
       if (error instanceof Error) {
-        setIsError(true);
+        setError(error.message);
         toast({
           title: "login failed",
           description: error.message,
           variant: "destructive",
         });
-      } else {
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      setIsLoading(true);
+      await signInWithPopup(auth, provider);
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
         toast({
           title: "login failed",
-          description: "An unknown error occurred",
+          description: error.message,
           variant: "destructive",
         });
       }
@@ -52,13 +71,13 @@ export function SignInHook() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (userCredentials) {
       toast({
         title: "login successful",
-        description: `Welcome ${user.displayName}!`,
+        description: `Welcome ${userCredentials.providerData[0].displayName}!`,
       });
     }
-  }, [user]);
+  }, [userCredentials]);
 
-  return { onSubmit, form, isLoading, isError };
+  return { onSubmit, form, isLoading, error, signInWithGoogle };
 }

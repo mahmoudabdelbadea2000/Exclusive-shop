@@ -9,11 +9,12 @@ import {
 import { Input } from "../ui/input";
 import { useTranslation } from "react-i18next";
 import { LoaderCircle } from "lucide-react";
-import { SignUpHook } from "@/logic";
+import { SignInHook, SignUpHook } from "@/logic";
 
 export function UserAuthRegister() {
   const { t } = useTranslation("global");
   const { form, isLoading, onSubmit } = SignUpHook();
+  const { signInWithGoogle } = SignInHook();
 
   return (
     <Form {...form}>
@@ -83,6 +84,7 @@ export function UserAuthRegister() {
         type="button"
         className="rounded-sm py-7"
         disabled={isLoading}
+        onClick={signInWithGoogle}
       >
         {isLoading ? (
           <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />

@@ -1,46 +1,47 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
 import { GlobalSchema } from "@/validation";
 import { toast } from "@/components/ui/use-toast";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
+import {
+  User,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "@/firebase";
-import { useNavigate } from "react-router-dom";
 
 export function SignUpHook() {
   const { signInSchema } = GlobalSchema();
-  const navigate = useNavigate();
-
-  type userRegisterValues = z.infer<typeof signInSchema>;
+  const [userCredentials, setUserCredentials] = useState<null | User>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const form = useForm<userRegisterValues>({
+  const [error, setError] = useState<null | string>(null);
+
+  type userLoginValues = z.infer<typeof signInSchema>;
+  const form = useForm<userLoginValues>({
     resolver: zodResolver(signInSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: userRegisterValues) => {
-    setIsLoading(true);
+  const onSubmit = async (data: userLoginValues) => {
+    const { email, password, username } = data;
     try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
-      toast({
-        title: "Sign Up successful",
-        description: `Welcome ${data.username}!`,
+      setIsLoading(true);
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await updateProfile(user, {
+        displayName: username,
       });
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      setUserCredentials(user);
     } catch (error) {
       if (error instanceof Error) {
+        setError(error.message);
         toast({
-          title: "Sign Up failed",
+          title: "sign up failed",
           description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Sign Up failed",
-          description: "An unknown error occurred",
           variant: "destructive",
         });
       }
@@ -49,9 +50,14 @@ export function SignUpHook() {
     }
   };
 
-  return {
-    onSubmit,
-    form,
-    isLoading,
-  };
+  useEffect(() => {
+    if (userCredentials) {
+      toast({
+        title: "sign up successful",
+        description: `Welcome ${userCredentials.providerData[0].displayName}!`,
+      });
+    }
+  }, [userCredentials]);
+
+  return { onSubmit, form, isLoading, error };
 }

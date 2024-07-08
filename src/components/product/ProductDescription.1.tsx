@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { StarRating } from "../utils/StartRating";
 import i18n from "@/locales/i18n";
+import { AddProductToWishlistHook } from "@/logic";
 
 export function ProductDescription({ ...oneProduct }) {
-  console.log(oneProduct);
   const { t } = useTranslation("global");
   const currentLang = i18n.language;
   const [quantity, setQuantity] = useState<number>(1);
@@ -21,6 +21,8 @@ export function ProductDescription({ ...oneProduct }) {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
   };
+
+  const { toggleWishlist, isFavProd } = AddProductToWishlistHook(oneProduct.id);
 
   return (
     <section className="mt-10 lg:mt-0">
@@ -120,8 +122,13 @@ export function ProductDescription({ ...oneProduct }) {
           <Button
             size="icon"
             className="border border-black bg-transparent text-black"
+            onClick={toggleWishlist}
           >
-            <Heart />
+            {isFavProd ? (
+              <Heart className=" fill-main-color " />
+            ) : (
+              <Heart className="text-black" />
+            )}
           </Button>
         </div>
         <div className="w-fit rounded-sm border border-black lg:w-full">

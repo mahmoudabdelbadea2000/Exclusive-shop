@@ -1,58 +1,59 @@
-import { categories } from "@/assets/data";
+import { cats } from "@/assets/data";
 import { toast } from "@/components/ui/use-toast";
 import { db, imagesDB } from "@/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  StorageReference,
-} from "firebase/storage";
+import { uploadImageAndGetUrl } from "@/lib";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { ref } from "firebase/storage";
+import { useEffect, useState } from "react";
 
-export function addCategoryHook() {
-  const collectionRef = collection(db, "category");
+export function AddCategoryHook() {
+  const [error, setError] = useState<string | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const uploadImageAndGetUrl = async (
-    storageRef: StorageReference,
-    imagePath: string,
-  ) => {
-    const imageData = await fetch(imagePath).then((res) => res.blob());
-    const snapshot = await uploadBytes(storageRef, imageData);
-    return await getDownloadURL(snapshot.ref);
-  };
+  useEffect(() => {
+    const addCat = async () => {
+      for (const category of cats) {
+        try {
+          setIsLoading(true);
+          const collectionRef = collection(db, "category");
 
-  const addCat = async () => {
-    for (const category of categories) {
-      try {
-        const imageCoverRef = ref(
-          imagesDB,
-          `images/${Date.now()}-${category.svg.split("/").pop()}`,
-        );
-        const imageUrl = await uploadImageAndGetUrl(
-          imageCoverRef,
-          category.svg,
-        );
+          const imageCoverRef = ref(
+            imagesDB,
+            `category-images/${Date.now()}-${category.image.split("/").pop()}`,
+          );
+          const imageUrl = await uploadImageAndGetUrl(
+            imageCoverRef,
+            category.image,
+          );
 
-        await addDoc(collectionRef, {
-          ...category,
-          image: imageUrl,
-        });
+          const newDocRef = doc(collectionRef);
+          const newCategory = {
+            ...category,
+            id: newDocRef.id,
+            image: imageUrl,
+          };
 
-        toast({
-          title: "Category added successfully",
-          description: "We've added your category for you.",
-        });
-      } catch (error) {
-        if (error instanceof Error) {
+          await setDoc(newDocRef, newCategory);
           toast({
-            title: "Error adding category:",
-            description: error.message,
-            variant: "destructive",
+            title: "Category added successfully",
+            description: "We've added your category for you.",
           });
+        } catch (error) {
+          if (error instanceof Error) {
+            setError(error.message);
+            toast({
+              title: "Error adding category:",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
+        } finally {
+          setIsLoading(false);
         }
       }
-    }
-  };
+    };
+    addCat();
+  }, []);
 
-  return { addCat };
+  return { error, isLoading };
 }

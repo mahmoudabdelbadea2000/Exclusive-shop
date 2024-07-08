@@ -4,8 +4,22 @@ import { Button } from "../ui/button";
 import { IProd } from "@/interface";
 import i18n from "@/locales/i18n";
 import { StarRating } from "../utils/StartRating";
-import { GetAllProductsHook } from "@/logic";
+import {
+  AddCartItemHook,
+  AddProductToWishlistHook,
+  GetAllProductsHook,
+} from "@/logic";
 import { SkeletonCard } from "./SkeletonCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface IProps extends IProd {
   badgeType?: string;
@@ -29,6 +43,11 @@ export function ProductCard({
 }: IProps) {
   const currentLang = i18n.language;
   const { isLoading } = GetAllProductsHook();
+  const { toggleWishlist, isFavProd } = AddProductToWishlistHook(id ? id : "");
+  const { toggleCartItems, isCartProd } = AddCartItemHook({
+    prodID: id ? id : "",
+  });
+
   return (
     <>
       {isLoading ? (
@@ -48,25 +67,60 @@ export function ProductCard({
                     <Button
                       size="icon"
                       className="h-[34px] w-[34px] rounded-full bg-background"
+                      onClick={toggleWishlist}
                     >
-                      <Heart className="text-black" />
+                      {isFavProd ? (
+                        <Heart className="border-main-color fill-main-color" />
+                      ) : (
+                        <Heart className="text-black" />
+                      )}
                     </Button>
                   )}
                   {!isShow && (
                     <Link
-                      to={`all-products/${id}`}
+                      to={`/all-products/${id}`}
                       className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-background"
                     >
                       <Eye />
                     </Link>
                   )}
                   {isDelete && (
-                    <Button
-                      size="icon"
-                      className="h-[34px] w-[34px] rounded-full bg-background"
-                    >
-                      <Trash2 className="text-black" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          className="h-[34px] w-[34px] rounded-full bg-background"
+                        >
+                          <Trash2 className="text-black" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>
+                            delete product from wishlist
+                          </DialogTitle>
+                          <DialogDescription>
+                            did you really want to delete this product?
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <div className="flex items-center justify-end gap-3">
+                            <Button
+                              variant="destructive"
+                              onClick={toggleWishlist}
+                              type="submit"
+                            >
+                              delete
+                            </Button>
+                            <DialogClose asChild>
+                              <Button type="button" variant="secondary">
+                                cancel
+                              </Button>
+                            </DialogClose>
+                          </div>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </div>
               </div>
@@ -77,9 +131,21 @@ export function ProductCard({
                   alt={name[currentLang]}
                 />
               </div>
-              <Button className="absolute bottom-0 left-0 h-10 w-full rounded-ee-sm rounded-es-sm bg-black font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                Add To Cart
-              </Button>
+              {isCartProd ? (
+                <Button
+                  className="absolute bottom-0 left-0 h-10 w-full rounded-none rounded-ee-sm rounded-es-sm bg-green-400 font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  onClick={toggleCartItems}
+                >
+                  product in cart
+                </Button>
+              ) : (
+                <Button
+                  className="absolute bottom-0 left-0 h-10 w-full rounded-none rounded-ee-sm rounded-es-sm bg-black font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  onClick={toggleCartItems}
+                >
+                  Add To Cart
+                </Button>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <h6 className="font-medium ">{name[currentLang]}</h6>

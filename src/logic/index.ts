@@ -5,3 +5,6 @@ export * from "./product/getAllProductHook";
 export * from "./product/getOneProductsHook";
 export * from "./category/addCategoryHook";
 export * from "./category/getCategoriesHook";
+export * from "./wishlist/addToWishlistHook";
+export * from "./cart/addCartItemHook";
+export * from "./cart/viewCartItems";
